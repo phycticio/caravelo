@@ -56,7 +56,6 @@
             </v-col>
             <v-col md="7" xs="12" sm="12">
               <v-select
-                @change="(val : string) => { this.reason = val; }"
                 label="What is the motive?"
                 :items="reasons"
                 v-model="reason"
