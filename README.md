@@ -2,6 +2,8 @@
 
 Quick commands to start the project
 
+`git clone git@github.com:phycticio/caravelo.git testing-caravelo && cd testing-caravelo && nvm use && yarn && yarn dev`
+
 - The project was created using [Vuetify](https://vuetifyjs.com/).
 - The components of the project are:
   - [Dialogs](https://vuetifyjs.com/en/components/dialogs/#usage)
@@ -23,5 +25,3 @@ Tasks performed:
 - [x] The agent will not be able to remove quota for a subscriber lower than 0.
 - [x] When the X (close) button is clicked it should close the modal and no change should be applied.
 - [x] When the save button is clicked it should save the changes and display a contextual success / error message.
-
-`git clone git@github.com:phycticio/caravelo.git testing-caravelo && cd testing-caravelo && nvm use && yarn && yarn dev`
