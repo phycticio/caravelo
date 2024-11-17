@@ -169,6 +169,7 @@ export default {
       this.flights = this.user.flights;
       this.reason = '';
       this.reasons = [];
+      this.alert.show = false;
     },
     updateUser() {
       this.$emit('update:flights', {flights: this.flights})
