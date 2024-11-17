@@ -27,7 +27,7 @@
 
         <v-container class="mt-4">
           <v-row>
-            <v-col md="5" class="bg-grey-lighten-3 d-flex align-center justify-center flex-column">
+            <v-col md="5" xs="12" sm="12" class="bg-grey-lighten-3 d-flex align-center justify-center flex-column">
               <h3 class="text-h5 mb-4">
                 Flights Left
               </h3>
@@ -54,7 +54,7 @@
                 </template>
               </v-text-field>
             </v-col>
-            <v-col md="7">
+            <v-col md="7" xs="12" sm="12">
               <v-select
                 @change="(val : string) => { this.reason = val; }"
                 label="What is the motive?"
