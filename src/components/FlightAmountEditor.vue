@@ -4,7 +4,7 @@
       <v-btn
         v-bind="activatorProps"
         color="surface-variant"
-        :text="`Edit Flights for ${this.user.name} (${this.user.flights})`"
+        :text="`Edit Flights for ${user?.name} (${user?.flights})`"
         variant="outlined"
         prepend-icon="mdi-pencil"
       >
@@ -14,7 +14,7 @@
     <template v-slot:default="{ isActive }">
       <v-card class="pa-4">
         <v-card-title>
-          Edit Flights for {{ user.name }}
+          Edit Flights for {{ user?.name }}
         </v-card-title>
         <v-card-subtitle>
           Add or remove flights from the subscriber
@@ -38,7 +38,7 @@
                             readonly>
                 <template v-slot:append>
                   <v-icon
-                    :disabled="this.flights === this.user.maxFlights"
+                    :disabled="flights === user?.maxFlights"
                     @click="changeQuota()"
                     class="cursor-pointer">
                     mdi-plus-circle-outline
@@ -46,7 +46,7 @@
                 </template>
                 <template v-slot:prepend>
                   <v-icon
-                    :disabled="this.flights === 0"
+                    :disabled="flights === 0"
                     @click="changeQuota(false)"
                     class="cursor-pointer">
                     mdi-minus-circle-outline
@@ -77,7 +77,7 @@
 
           <v-btn
             class="bg-red"
-            :disabled="!reason || !this.reasons"
+            :disabled="!reason || !reasons"
             text="Save Changes"
             @click="saveNewQuota()"
           ></v-btn>
@@ -88,45 +88,47 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue';
+
 export default {
   name: 'FlightAmountEditor',
   props: {
-    user: {
-      name: String,
-      id: Number,
-      flights: Number,
-      maxFlights: Number
-    },
+    user: Object as PropType<{
+      name: string,
+      id: number,
+      flights: number,
+      maxFlights: number
+    }>,
   },
   emits: ['update:flights'],
   data() {
     return {
       initialFlightsChanged: false,
-      flights: 0,
-      initialFlights: 0,
-      reasons: [],
+      flights: 0 as number,
+      initialFlights: 0 as number,
+      reasons: [] as string[],
       reason: '',
       newQuota: {
-        id: null,
+        id: null as number | null,
         flights: 0,
         reason: ''
       },
       alert: {
         show: false,
-        type: 'info',
+        type: 'info' as 'info' | 'success' | 'error',
         text: ''
       }
     }
   },
-  mounted() {
-    this.flights = this.user.flights;
-    this.initialFlights = this.user.flights;
+  mounted: function () {
+    this.flights = this.user?.flights || 0;
+    this.initialFlights = this.user?.flights || 0;
   },
   methods: {
     changeQuota(add: boolean = true) {
       this.flights = add ? this.flights + 1 : this.flights - 1;
       this.flights = this.flights < 0 ? 0 : this.flights;
-      this.flights = this.flights === this.user.maxFlights ? this.user.maxFlights : this.flights;
+      this.flights = this.flights === this.user?.maxFlights ? this.user?.maxFlights : this.flights;
       this.initialFlightsChanged = this.initialFlights !== this.flights;
       this.reasons = this.initialFlightsChanged ? this._getReasons(
         this.flights > this.initialFlights
@@ -135,7 +137,7 @@ export default {
     },
     async saveNewQuota() {
       this.newQuota = {
-        id: this.user.id,
+        id: this.user?.id || 0,
         flights: this.flights,
         reason: this.reason,
       }
@@ -150,7 +152,7 @@ export default {
 
         this.alert.show = true;
         this.alert.text = [
-          `${this.user.name}'s quota has been changed to <strong>${this.flights}</strong>`,
+          `${this.user?.name}'s quota has been changed to <strong>${this.flights}</strong>`,
           `<br><strong>Reason</strong>: ${this.reason}`
         ].join('');
         this.alert.type = 'success';
@@ -158,14 +160,14 @@ export default {
         this.reason = '';
         this.reasons = [];
         this.updateUser();
-      } catch(e) {
+      } catch(error: any) {
         this.alert.show = true;
-        this.alert.text = `${response.status}: ${e.message}`;
+        this.alert.text = `${response.status}: ${error.message}`;
         this.alert.type = 'error';
       }
     },
     resetUserQuota() {
-      this.flights = this.user.flights;
+      this.flights = this.user?.flights || 0;
       this.reason = '';
       this.reasons = [];
       this.alert.show = false;
